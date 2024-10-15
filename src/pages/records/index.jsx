@@ -9,6 +9,8 @@ import RecordCard from "./components/record-card"; // Adjust the import path
 const Index = () => {
   const navigate = useNavigate();
   const { user } = usePrivy();
+
+  console.log("users from usePrivey",user)
   const {
     records,
     fetchUserRecords,
@@ -21,8 +23,8 @@ const Index = () => {
 
   useEffect(() => {
     if (user) {
-      fetchUserByEmail(user.email.address);
-      fetchUserRecords(user.email.address);
+      fetchUserByEmail(user.email?.address);
+      fetchUserRecords(user.email?.address);
     }
   }, [user, fetchUserByEmail, fetchUserRecords]);
 
@@ -41,7 +43,9 @@ const Index = () => {
 
   const createFolder = async (foldername) => {
     try {
+      console.log("current user",foldername )
       if (currentUser) {
+        console.log("current user", currentUser)
         const newRecord = await createRecord({
           userId: currentUser.id,
           recordName: foldername,
@@ -51,7 +55,7 @@ const Index = () => {
         });
 
         if (newRecord) {
-          fetchUserRecords(user.email.address);
+          fetchUserRecords(user?.email?.address);
           handleCloseModal();
         }
       }
@@ -63,7 +67,7 @@ const Index = () => {
 
   const handleNavigate = (name) => {
     const filteredRecords = userRecords.filter(
-      (record) => record.recordName === name,
+      (record) => record?.recordName === name,
     );
     navigate(`/medical-records/${name}`, {
       state: filteredRecords[0],
@@ -90,7 +94,7 @@ const Index = () => {
       <div className="grid w-full gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-4">
         {userRecords?.map((record) => (
           <RecordCard
-            key={record.recordName}
+            key={record?.recordName}
             record={record}
             onNavigate={handleNavigate}
           />
